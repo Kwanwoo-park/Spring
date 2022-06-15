@@ -1,5 +1,6 @@
 package com.example.spring.web;
 
+import com.example.spring.config.auth.LoginUser;
 import com.example.spring.config.auth.dto.SessionUser;
 import com.example.spring.service.posts.PostsService;
 import com.example.spring.web.dto.PostsResponseDto;
@@ -18,11 +19,14 @@ public class IndexController {
     private final HttpSession httpSession;
 
     @GetMapping("/")
-    public String index(Model model) {/*    -서버 템플릿 엔진에서 사용할 수 있는 객체를 저장할 수 있습니다.
+    public String index(Model model, @LoginUser SessionUser user) {/*    -서버 템플릿 엔진에서 사용할 수 있는
+                                                                            객체를 저장할 수 있습니다.
                                             -여기서는 postsService.findAllDesc()로 가져온 결과를 posts로
-                                            index.mustache에 전달합니다.*/
+                                            index.mustache에 전달합니다.
+                                            -기존에 (User) httpSession.getAttribute("user")로 가져오던 세션 정보 값이 개선
+                                            -이제는 어느 컨트롤러든지 @LoginUser만 사용하면 세션 정보를 가져올 수 있습니다.*/
         model.addAttribute("posts", postsService.findAllDesc());
-        SessionUser user = (SessionUser) httpSession.getAttribute("user"); /*   -앞서 작성된 CustomOAuth2UserService
+        /*SessionUser user = (SessionUser) httpSession.getAttribute("user");   -앞서 작성된 CustomOAuth2UserService
         에서 로그인 성공시 세션에 SessionUser를 저장하도록 구성 즉, 로그인 성공 시 httpSession.getAttribute("user")에서 값을
         가지고 올 수 있습니다.*/
 
